@@ -13,4 +13,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# YouTube dekodlash xatosini (JS Runtime) tuzatish uchun muhit o'zgaruvchisi
+ENV YTDLP_JS_RUNTIME=node
+
 CMD ["npm", "run", "start:prod"]
