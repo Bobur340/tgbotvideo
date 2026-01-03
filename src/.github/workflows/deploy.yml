@@ -1,0 +1,26 @@
+name: Deploy Bot
+
+on:
+  push:
+    branches:
+      - main  # Faqat main branchga push bo'lganda ishlaydi
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/projects/insta-reels-bot  # Serverdagi bot manzili
+            git pull origin main               # Yangi kodni olish
+            npm install                        # Yangi kutubxonalarni yuklash
+            npm run build                      # NestJS ni build qilish
+            pm2 restart insta-bot              # Botni qayta ishga tushirish
